@@ -1,0 +1,65 @@
+{
+  "slug": "france-adoption-ia-generative",
+  "date": "2026-06-08",
+  "format": "portrait",
+  "slides": [
+    {
+      "template": "Hook",
+      "eyebrow": "ADOPTION IA",
+      "title": "IA generative en France : vos concurrents ont deja demarre"
+    },
+    {
+      "template": "Stat",
+      "figure": "44%",
+      "label": "de la population active francaise utilise l'IA generative fin 2025",
+      "source": "https://blogs.microsoft.com/on-the-issues/2026/01/08/global-ai-adoption-in-2025"
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Scan",
+      "headline": "L'usage existe deja chez vos equipes",
+      "body": "Vos collaborateurs utilisent ChatGPT, Copilot ou Gemini sans cadre. Cette IA de l'ombre cree un risque actif sur vos donnees internes."
+    },
+    {
+      "template": "Stat",
+      "figure": "55%",
+      "label": "des TPE et PME francaises utilisent l'IA generative fin 2025, contre 31% un an plus tot",
+      "source": "https://presse.bpifrance.fr"
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Solve",
+      "headline": "Demarrez sur un seul cas a valeur claire",
+      "body": "Un sprint de 4 a 8 semaines transforme un processus couteux en outil utilisable, avec un indicateur de retour fixe des le depart."
+    },
+    {
+      "template": "Hook",
+      "eyebrow": "PIEGE COURANT",
+      "title": "Lancer cinq projets IA en meme temps gaspille budget et confiance"
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Scale",
+      "headline": "Etendez quand les chiffres prouvent l'usage",
+      "body": "Une fois le premier cas valide, le perimetre s'etend. L'IA de l'ombre devient un usage pilote, securise, coherent d'un service a l'autre."
+    },
+    {
+      "template": "Stat",
+      "figure": "5e",
+      "label": "rang mondial pour la France sur la part de population active utilisant l'IA generative",
+      "source": "https://news.microsoft.com/source/emea/features/ai-diffusion"
+    },
+    {
+      "template": "CTA",
+      "headline": "Votre entreprise pilote cet usage, ou le subit ?",
+      "cta_label": "Audit gratuit 30 min",
+      "url": "https://solidscale.tech"
+    }
+  ],
+  "pipeline_applied": {
+    "audit_score": 75,
+    "audit_skill": "great-web-copy/audit-copy",
+    "humanizer": "yes",
+    "humanizer_date": "2026-06-01"
+  }
+}
