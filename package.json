@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
+    "@fontsource/geist": "^5.2.9",
     "@storybook/addon-essentials": "^8.5",
     "@storybook/blocks": "^8.5",
     "@storybook/react": "^8.5",
