@@ -178,3 +178,9 @@ dist
 
 # Storybook
 storybook-static
+
+# SolidScale fork additions (D-11)
+output/
+*.spec.json
+!examples/*.spec.json
+.env.local
