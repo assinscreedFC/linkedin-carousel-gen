@@ -1,27 +1,30 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+  push:
     branches: [main]
 
 jobs:
-  check:
+  test:
+    # Pitfall 4: lock to ubuntu-latest for stable cross-OS snapshot rendering.
+    # Snapshots committed in tests/snapshots/ must be regenerated on Linux only.
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
           lfs: true
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.3.x
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
-      - name: Type check
+      - name: Typecheck
         run: bun run typecheck
 
       - name: Lint
@@ -30,11 +33,26 @@ jobs:
       - name: Format check
         run: bun run format:check
 
-      - name: Build Storybook
-        run: bun run build-storybook
+      - name: Run tests (schema + tokens + em-dash + templates + e2e)
+        run: bun test
 
-      - name: Build example carousels (E2E)
+      - name: Check em-dash on README + examples
+        run: bun run check:copy
+
+      - name: E2E smoke, render fixture
+        run: bun run gen examples/france-adoption-ia-generative.spec.json
+
+      - name: Verify PDF exists and is non-empty
         run: |
-          bun run examples/tips-carousel.tsx
-          bun run examples/product-launch.tsx
-          bun run examples/event-promo.tsx
+          test -f output/carousels/2026-06-08-france-adoption-ia-generative.pdf
+          size=$(stat -c%s output/carousels/2026-06-08-france-adoption-ia-generative.pdf)
+          echo "PDF size: $size bytes"
+          test "$size" -gt 10000
+          test "$size" -lt 104857600   # < 100MB (CAROUSEL-07)
+
+      - name: Upload PDF artifact (for inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: carousel-pdf-${{ github.sha }}
+          path: output/carousels/*.pdf
+          retention-days: 7
