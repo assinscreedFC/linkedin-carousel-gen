@@ -49,7 +49,8 @@
     "@types/react": "^19.2.9",
     "pdf-lib": "^1.17.1",
     "react": "^19.2.3",
-    "satori": "^0.19.1"
+    "satori": "^0.19.1",
+    "zod": "^3"
   },
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
