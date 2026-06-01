@@ -1,182 +1,166 @@
-# LinkedIn Carousel Generator
+<!-- pipeline_applied: { audit_score: pending_anis_review, audit_skill: great-web-copy/audit-copy, humanizer: pending_anis_review } -->
 
-[![CI](https://github.com/Slashgear/linkedin-carousel-gen/actions/workflows/ci.yml/badge.svg)](https://github.com/Slashgear/linkedin-carousel-gen/actions/workflows/ci.yml)
+# linkedin-carousel-gen, SolidScale fork
+
+[![CI](https://github.com/assinscreedFC/linkedin-carousel-gen/actions/workflows/ci.yml/badge.svg)](https://github.com/assinscreedFC/linkedin-carousel-gen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://slashgear.github.io/linkedin-carousel-gen/)
 
-Tool to generate LinkedIn carousel posts as PDFs. Built with TypeScript, Bun, React and Satori.
+Fork brandé navy, cobalt, azur de [Slashgear/linkedin-carousel-gen](https://github.com/Slashgear/linkedin-carousel-gen). Produit les carrousels LinkedIn de l'agence SolidScale (palette du logo, S3 Framework, pipeline copy 6 couches, anti AI slop). Le rendu reste Bun + React + Satori, comme upstream.
 
-<p align="center">
-  <img src="assets/previews/tips-carousel.png" width="250" alt="Tips Carousel" />
-  <img src="assets/previews/product-launch.png" width="250" alt="Product Launch" />
-  <img src="assets/previews/event-promo.png" width="250" alt="Event Promo" />
-</p>
+## Pourquoi ce fork
 
-**[View Storybook Demo](https://slashgear.github.io/linkedin-carousel-gen/)** | **[Download Example PDFs](https://slashgear.github.io/linkedin-carousel-gen/?path=/docs/galleries-tips-carousel--docs)**
+L'upstream Slashgear est généraliste : 7 thèmes, 12 slides, anglais. Ce fork :
 
-## Features
+- Verrouille la palette aux 3 couleurs navy, cobalt, azur de `DESIGN.md` (allowlist enforcée par tests).
+- Restreint à 4 templates métier SolidScale : Hook, Stat, FrameworkStep, CTA.
+- Structure les carrousels selon Caleb (8 à 10 slides), template `FrameworkStep` mappé sur le S3 Framework (Scan, Solve, Scale).
+- Découple skill et CLI via un JSON spec versionné (D-07).
+- Passe chaque texte au pipeline copy 6 couches `solidscale-voice` AVANT rendu (audit qualité, humanizer, marker `pipeline_applied`).
 
-- **Theme System** - 7 built-in color themes (dark, light, blue, green, red, purple, orange)
-- **12 Generic Slides** - Reusable slide components for common carousel patterns
-- **Storybook** - Visual documentation and component playground
-- **PDF Export** - 1080x1080px LinkedIn-optimized carousel format
+## Prérequis
+
+- Bun >= 1.3
+- Node >= 22 (pour le pont portfolio `pnpm carousel:gen`)
+- Git, gh CLI
+- macOS, Linux ou Windows pour l'écriture des specs. La CI tourne sur ubuntu-latest pour stabiliser les snapshots (Pitfall 4, voir `tests/snapshots/README.md`).
 
 ## Installation
 
 ```bash
+git clone https://github.com/assinscreedFC/linkedin-carousel-gen.git
+cd linkedin-carousel-gen
 bun install
+bun test
 ```
 
-## Usage
+## Architecture
 
-### Generate PDF
+| Dossier ou fichier | Rôle |
+| ------------------ | ---- |
+| `src/tokens.ts` | Palette navy, cobalt, azur (allowlist DESIGN.md, single source de vérité) |
+| `src/spec/schema.ts` | Contrat JSON spec (Zod). Découpe skill / CLI (D-07) |
+| `src/slides/solidscale/` | 4 templates : Hook, Stat, FrameworkStep, CTA |
+| `src/render/` | Pipeline Satori, resvg, pdf-lib |
+| `src/cli/gen.ts` | Entrée CLI `bun run gen` |
+| `scripts/check-no-em-dash.ts` | Garde anti em dash (CLAUDE.md, signal IA #1) |
+| `examples/` | Specs JSON de référence (S3 Framework, adoption IA France) |
+| `tests/` | schema, tokens allowlist, em-dash, templates snapshots, e2e |
+
+## Utilisation
 
 ```bash
-bun run generate
+# Format portrait par défaut, 1200x1500 (D-04, max engagement LinkedIn doc 2025)
+bun run gen examples/france-adoption-ia-generative.spec.json
+# Produit output/carousels/2026-06-08-france-adoption-ia-generative.pdf
+
+# Format square pour cross-post Instagram, 1080x1080
+bun run gen examples/france-adoption-ia-generative.spec.json --square
 ```
 
-Generates a PDF in the `out/` folder.
+Codes de sortie :
 
-### Development with Storybook
+| Code | Cause |
+| ---- | ----- |
+| 0 | Succès |
+| 2 | Arguments invalides (usage) |
+| 3 | Spec invalide (Zod) |
+| 4 | Em dash détecté dans la spec (anti AI slop) |
+| 5 | PDF généré > 100 MB (CAROUSEL-07) |
+
+## Intégration skill SolidScale
+
+Le rendu n'est qu'un étage du processus complet. Le contenu publié sur LinkedIn passe par 6 couches, dans cet ordre :
+
+1. Archive Notion : consulter l'index des posts pour cohérence sujets et callbacks.
+2. Caleb : structurer le récit (Hook, Problem, Journey, Lesson, CTA, About).
+3. animalz : brief court par slide.
+4. Skill plateforme `solidscale-carousel` : écrit le JSON spec dans `output/carousels/{slug}.spec.json`. Mapping templates SolidScale (Hook, Stat sourcée, FrameworkStep S3, CTA audit). Le skill compose le pipeline `solidscale-voice`.
+5. Audit qualité (`great-web-copy/audit-copy`) : score >= 60 obligatoire. Itérer sinon.
+6. Humanizer : passe anti IA sur le draft, puis review manuelle Anis (couche 6) AVANT publication.
+
+Le CLI Bun consomme le JSON spec validé et rend tel quel. Sans re-vérification (D-08).
+
+Côté portfolio, le script optionnel `pnpm carousel:gen <spec>` shell-out vers ce fork via la variable `CAROUSEL_REPO_PATH`.
+
+## Templates
+
+### Hook
+
+Slide de couverture. Champs : `title` (max 140), `eyebrow` (max 60, optionnel). Sert d'accroche, vocabulaire S3 ou question directe à dirigeant d'entreprise.
+
+### Stat
+
+Chiffre source de vérité. Champs : `figure` (ex. "44%"), `label` (contexte court), `source` (URL obligatoire). Tout chiffre est sourcé, jamais inventé (cf. mémoire `feedback_chiffres_source_verite.md`).
+
+### FrameworkStep
+
+Étape du S3 Framework. Champs : `step` (enum Scan, Solve, Scale), `headline`, `body`. Trois slides FrameworkStep maximum par carrousel pour respecter le pacing Caleb.
+
+### CTA
+
+Appel final vers l'audit gratuit 30 min. Champs : `headline`, `cta_label` (ex. "Audit gratuit 30 min"), `url` (défaut `https://solidscale.tech`). Jamais de lien Calendly nu : on passe toujours par solidscale.tech.
+
+## Format JSON spec
+
+```json
+{
+  "slug": "s3-framework",
+  "date": "2026-06-08",
+  "format": "portrait",
+  "slides": [
+    { "template": "Hook", "title": "..." },
+    { "template": "Stat", "figure": "55%", "label": "...", "source": "https://..." },
+    { "template": "FrameworkStep", "step": "Scan", "headline": "...", "body": "..." }
+  ],
+  "pipeline_applied": {
+    "audit_score": 75,
+    "audit_skill": "great-web-copy/audit-copy",
+    "humanizer": "yes",
+    "humanizer_date": "2026-06-01"
+  }
+}
+```
+
+Validation Zod stricte dans `src/spec/schema.ts`. Le marker `pipeline_applied` est traçable, écrit par le skill `solidscale-carousel` après couche 5.
+
+## Tests
 
 ```bash
-bun run storybook
+bun test                        # Toute la suite
+bun test tests/tokens           # Allowlist palette enforcée
+bun test tests/em-dash          # Anti AI slop
+bun test tests/templates        # Snapshots Satori des 4 templates
+bun test tests/e2e              # Pipeline complète sur la fixture
 ```
 
-Opens Storybook at http://localhost:6006 for visual component development.
+Snapshots PNG dans `tests/snapshots/`. À régénérer sur Linux uniquement (Pitfall 4) via la CI ubuntu-latest, jamais en local Windows ou macOS.
 
-### Build Storybook
+## CI
 
-```bash
-bun run build-storybook
-```
+GitHub Actions verrouillée sur ubuntu-latest (`.github/workflows/ci.yml`) :
 
-Builds static Storybook to `storybook-static/`.
+- bun install (frozen-lockfile)
+- typecheck, lint, format check
+- bun test (schema + tokens + em-dash + templates + e2e)
+- `bun run check:copy` sur README et exemples
+- smoke E2E : `bun run gen examples/france-adoption-ia-generative.spec.json`
+- garde taille : PDF > 10 KB et < 100 MB
+- PDF artifact uploadé pour inspection (rétention 7 jours)
 
-## Quick Start
+## Workflow recommandé
 
-```tsx
-import { CoverSlide, ListSlide, CTASlide } from "./src/slides/generic";
-import { blueTheme } from "./src/theme";
-
-const slides = [
-  <CoverSlide theme={blueTheme} title="5 Tips for Better Code" badge="TIPS" highlight="Better" />,
-  <ListSlide
-    theme={blueTheme}
-    title="The essentials"
-    items={[
-      { text: "Write tests first" },
-      { text: "Keep functions small" },
-      { text: "Document your decisions" },
-    ]}
-  />,
-  <CTASlide theme={blueTheme} title="Ready to start?" ctaLabel="Learn more" ctaUrl="example.com" />,
-];
-```
-
-## Available Themes
-
-| Theme         | Description                                  |
-| ------------- | -------------------------------------------- |
-| `darkTheme`   | Dark background with yellow accent (default) |
-| `lightTheme`  | Light background with blue accent            |
-| `blueTheme`   | Dark blue background with bright blue accent |
-| `greenTheme`  | Dark green background with emerald accent    |
-| `redTheme`    | Dark background with red accent              |
-| `purpleTheme` | Dark purple background with violet accent    |
-| `orangeTheme` | Dark background with orange accent           |
-
-## Available Slides
-
-| Slide             | Description                                     |
-| ----------------- | ----------------------------------------------- |
-| `CoverSlide`      | Hook/title slide with optional background image |
-| `ProblemSlide`    | List of pain points with icons                  |
-| `SolutionSlide`   | Features with vertical/grid layout              |
-| `ListSlide`       | Numbered or bulleted list                       |
-| `QuoteSlide`      | Citation with author avatar                     |
-| `StatsSlide`      | Metrics in row or grid layout                   |
-| `ComparisonSlide` | Before/after or VS comparison                   |
-| `ProcessSlide`    | Steps with visual connectors                    |
-| `ChecklistSlide`  | Styled checklist                                |
-| `CTASlide`        | Call-to-action finale                           |
-| `ImageTextSlide`  | Full image with text overlay                    |
-| `ProfileSlide`    | Author profile card                             |
-
-## Examples
-
-Ready-to-run example carousels in the `examples/` folder:
-
-| Example                                           | Description                   | Theme  | PDF                                                                                        |
-| ------------------------------------------------- | ----------------------------- | ------ | ------------------------------------------------------------------------------------------ |
-| [tips-carousel.tsx](examples/tips-carousel.tsx)   | Tips/guide style carousel     | Blue   | [Download](https://slashgear.github.io/linkedin-carousel-gen/downloads/tips-carousel.pdf)  |
-| [product-launch.tsx](examples/product-launch.tsx) | Product announcement carousel | Green  | [Download](https://slashgear.github.io/linkedin-carousel-gen/downloads/product-launch.pdf) |
-| [event-promo.tsx](examples/event-promo.tsx)       | Event promotion carousel      | Purple | [Download](https://slashgear.github.io/linkedin-carousel-gen/downloads/event-promo.pdf)    |
-
-Run an example:
-
-```bash
-bun run examples/tips-carousel.tsx
-```
-
-## Stack
-
-- **Bun** - TypeScript runtime
-- **React** - Declarative slide composition
-- **Satori** - React -> SVG rendering
-- **resvg** - SVG -> PNG conversion
-- **pdf-lib** - PDF assembly
-- **Storybook** - Component documentation
-
-## Commands
-
-```bash
-bun install          # Install dependencies
-bun run generate     # Generate carousel PDF
-bun run storybook    # Start Storybook dev server
-bun run build-storybook  # Build static Storybook
-bun run typecheck    # Type check with tsc
-bun run lint         # Run oxlint
-bun run format       # Format code with oxfmt
-```
-
-## Base Components API
-
-For custom layouts, use the base components from `src/slides/components`:
-
-| Component   | Props                                      | Description                          |
-| ----------- | ------------------------------------------ | ------------------------------------ |
-| `Slide`     | `theme`, `style`, `children`               | Base container (1080x1080px)         |
-| `Badge`     | `theme`, `style`, `children`               | Colored label/tag                    |
-| `Title`     | `theme`, `style`, `children`, `highlight?` | Main heading with optional highlight |
-| `Subtitle`  | `theme`, `style`, `children`               | Secondary text                       |
-| `StatBox`   | `theme`, `style`, `value`, `label`         | Metric display box                   |
-| `CheckItem` | `theme`, `children`, `highlight?`          | Checklist item with checkmark        |
-| `CTABox`    | `theme`, `style`, `title`, `url`           | Call-to-action box                   |
-
-Example:
-
-```tsx
-import { Slide, Title, Badge, CheckItem } from "./src/slides/components";
-import { purpleTheme } from "./src/theme";
-
-<Slide theme={purpleTheme}>
-  <Badge theme={purpleTheme}>PRO TIP</Badge>
-  <Title theme={purpleTheme} highlight="faster">
-    Ship code faster
-  </Title>
-  <CheckItem theme={purpleTheme} highlight="tests">
-    Write tests first
-  </CheckItem>
-</Slide>;
-```
-
-## Documentation
-
-- [Usage Guide](docs/USAGE.md) - Detailed usage instructions
-- [Themes Guide](docs/THEMES.md) - Theme customization
-- [Contributing](CONTRIBUTING.md) - How to contribute
+1. Brief sujet, vocabulaire S3, audience entreprise.
+2. Lire l'archive Notion des posts LinkedIn (callbacks, sujets déjà traités).
+3. Skill `solidscale-carousel` invoqué : produit le JSON spec après couches 1 à 5 de `solidscale-voice`.
+4. CLI : `pnpm carousel:gen output/carousels/{slug}.spec.json`.
+5. Review Anis sur le PDF (couche 6). Itérer si besoin.
+6. Publication LinkedIn (carrousel document). Caption passée par `solidscale-voice`. CTA en commentaire #1 vers solidscale.tech.
+7. Archive Notion mise à jour (statut PUBLIÉ, URL, hook, callbacks).
 
 ## License
 
-MIT
+MIT, cohérent avec l'upstream Slashgear. Voir `LICENSE`. Les ajouts SolidScale (templates, tokens, pipeline) restent MIT.
+
+## Remerciements
+
+Upstream : [Slashgear/linkedin-carousel-gen](https://github.com/Slashgear/linkedin-carousel-gen). Le rendu Satori, la structure React et le packaging Bun viennent de là. Le travail SolidScale ajoute le brand, la palette verrouillée, les 4 templates métier et l'intégration pipeline copy.
