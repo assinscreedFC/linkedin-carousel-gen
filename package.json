@@ -42,7 +42,9 @@
     "build-storybook": "storybook build -o storybook-static",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "bun run version && bun publish"
+    "release": "bun run version && bun publish",
+    "check:copy": "bun scripts/check-no-em-dash.ts README.md",
+    "test:update-snapshots": "echo 'Generate snapshots on Linux only (CI ubuntu-latest) — see tests/snapshots/README.md'"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
