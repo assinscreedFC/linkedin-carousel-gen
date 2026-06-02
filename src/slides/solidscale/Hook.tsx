@@ -99,31 +99,8 @@ export function Hook({
           </div>
         ) : null}
 
-        {/* Niveau 4 : tags (chips Geist Mono uppercase, optionnel, D-10) */}
-        {slide.tags && slide.tags.length > 0 ? (
-          <div style={{ display: "flex", flexDirection: "row", gap: 16 }}>
-            {slide.tags.map((tag, i) => (
-              <div key={i} style={{
-                display: "flex",
-                fontFamily: FONTS.mono,
-                fontSize: TYPE.tag.size,
-                fontWeight: TYPE.tag.weight,
-                lineHeight: TYPE.tag.lineHeight,
-                letterSpacing: TYPE.tag.tracking,
-                color: COLORS.azurDark,
-                textTransform: "uppercase",
-                backgroundColor: COLORS.surface2,
-                paddingTop: 8,
-                paddingBottom: 8,
-                paddingLeft: 16,
-                paddingRight: 16,
-                borderRadius: 4,
-              }}>
-                {tag}
-              </div>
-            ))}
-          </div>
-        ) : null}
+        {/* Niveau 4 : tags retirés du render Hook (AJUST 4 — Anis 2026-06-02).
+            Le champ reste dans le schema Zod (retro-compat, usage potentiel autres templates). */}
 
       </div>
 
