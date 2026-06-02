@@ -303,9 +303,9 @@ const VARIANTS: ConstellationVariant[] = [
 ];
 
 export function GeometricConstellation({ variant = 0 }: { variant?: number }): React.ReactElement {
-  // Couleur unique azurDark #3B82F6 sur toutes les couches — electrique sur fond #050810.
+  // Couleur unique electricBlue #60A5FA sur toutes les couches — encore plus electrique sur fond #050810.
   // Hierarchie par opacite uniquement (0.18-0.35), strokeWidth inchange depuis commit precedent.
-  const stroke = COLORS.azurDark;
+  const stroke = COLORS.electricBlue;
   const v = VARIANTS[Math.abs(variant) % VARIANTS.length];
 
   return (
