@@ -12,10 +12,8 @@
     {
       "template": "Hook",
       "kicker": "S3 FRAMEWORK",
-      "title": "Scaler ton entreprise avec l'IA en 90 jours",
-      "subtitle": "La methode SolidScale pour dirigeants d'entreprise qui veulent un impact mesurable",
-      "tags": ["IA", "B2B", "AUTOMATION"],
-      "byline": "Anis Hammouche, 3 min de lecture"
+      "title": "Scaler son entreprise avec l'IA en 90 jours",
+      "subtitle": "La methode SolidScale pour dirigeants d'entreprise qui veulent un impact mesurable"
     },
     {
       "template": "Hook",
@@ -26,7 +24,9 @@
       "template": "FrameworkStep",
       "step": "Scan",
       "headline": "Cartographiez l'usage reel avant de proposer un outil",
-      "body": "Vos equipes utilisent deja ChatGPT, Copilot ou Gemini hors cadre. Ce Scan recense les usages, identifie un cas a forte valeur et fixe l'indicateur de retour des le depart."
+      "body": "Vos equipes utilisent deja ChatGPT, Copilot ou Gemini hors cadre. Ce Scan recense les usages, identifie un cas a forte valeur et fixe l'indicateur de retour des le depart.",
+      "calloutQuote": "L'IA appliquee commence par comprendre comment l'entreprise fonctionne.",
+      "microAnnotation": "Etape 1 sur 3 du framework S3"
     },
     {
       "template": "FrameworkStep",
@@ -44,6 +44,8 @@
       "template": "Stat",
       "figure": "73%",
       "label": "des dirigeants d'entreprise estiment que l'IA va transformer leur secteur d'ici trois ans",
+      "subLabel": "Enquete aupres de 1 400 dirigeants dans 85 pays",
+      "comparator": "vs 52% en 2023",
       "source": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai"
     },
     {
@@ -54,11 +56,14 @@
     },
     {
       "template": "CTA",
-      "headline": "Votre premier cas IA en 90 jours, garanti",
       "kicker": "AUDIT GRATUIT",
+      "headline": "Votre premier cas IA en 90 jours, garanti",
       "subtitle": "30 minutes pour identifier le cas a forte valeur dans votre entreprise",
       "cta_label": "Reserver l'audit",
-      "url": "https://solidscale.tech"
+      "url": "https://solidscale.tech",
+      "urlDisplay": "solidscale.tech",
+      "urlReal": "https://solidscale.tech",
+      "signature": "Anis Hammouche, SolidScale"
     }
   ]
 }
