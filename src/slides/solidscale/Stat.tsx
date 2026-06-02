@@ -1,15 +1,23 @@
 // src/slides/solidscale/Stat.tsx
-// D-06 Stat template (sourced number). Chiffres sourcés obligatoires
-// (feedback_chiffres_source_verite.md): source field always rendered.
+// Engineered Authority Stat (dark theme).
+// Huge azur tabular numeral, white label, source citation in muted mono.
 
 import React from "react";
-import { COLORS, FONTS } from "../../tokens";
+import { COLORS, FONTS, TYPE, SPACING } from "../../tokens";
 import type { Slide } from "../../spec/schema";
+import { Header, Footer, Eyebrow, Backdrop } from "./_chrome";
 
 type StatSlide = Extract<Slide, { template: "Stat" }>;
 
-export function Stat({ slide }: { slide: StatSlide }): React.ReactElement {
-  // Source display: strip protocol + path for readability
+export function Stat({
+  slide,
+  index,
+  total,
+}: {
+  slide: StatSlide;
+  index: number;
+  total: number;
+}): React.ReactElement {
   const sourceLabel = (() => {
     try {
       const u = new URL(slide.source);
@@ -25,51 +33,74 @@ export function Stat({ slide }: { slide: StatSlide }): React.ReactElement {
       flexDirection: "column",
       width: "100%",
       height: "100%",
-      padding: 80,
-      backgroundColor: COLORS.bgElevated,
+      backgroundColor: COLORS.bg,
       fontFamily: FONTS.sans,
+      position: "relative",
     }}>
+      <Backdrop variant="step" />
+      <Header current={index} total={total} inverse />
+
       <div style={{
         display: "flex",
-        flex: 1,
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        flex: 1,
+        paddingLeft: SPACING.rail,
+        paddingRight: SPACING.rail,
+        paddingTop: 64,
       }}>
+        <div style={{ display: "flex", marginBottom: 36 }}>
+          <Eyebrow text="Chiffre clé" color={COLORS.azurDark} withRule={true} />
+        </div>
+
         <div style={{
           display: "flex",
-          fontFamily: FONTS.display,
-          fontSize: 260,
-          fontWeight: 400,
-          lineHeight: 1,
-          letterSpacing: -6,
-          color: COLORS.cobalt,
-          marginBottom: 32,
+          flexDirection: "column",
+          flex: 1,
+          justifyContent: "center",
         }}>
-          {slide.figure}
+          <div style={{
+            display: "flex",
+            fontFamily: FONTS.sans,
+            fontSize: TYPE.stat.size,
+            fontWeight: TYPE.stat.weight,
+            lineHeight: TYPE.stat.lineHeight,
+            letterSpacing: TYPE.stat.tracking,
+            color: COLORS.azurDark,
+            fontVariantNumeric: "tabular-nums",
+            marginLeft: -8,
+          }}>
+            {slide.figure}
+          </div>
+
+          <div style={{ display: "flex", height: 4, width: 96, backgroundColor: COLORS.cobalt, marginTop: 36, marginBottom: 36 }} />
+
+          <div style={{
+            display: "flex",
+            fontFamily: FONTS.sans,
+            fontSize: 40,
+            fontWeight: 400,
+            lineHeight: 1.35,
+            color: COLORS.textInverse,
+            maxWidth: 820,
+          }}>
+            {slide.label}
+          </div>
         </div>
-        <div style={{
-          display: "flex",
-          fontFamily: FONTS.sans,
-          fontSize: 36,
-          fontWeight: 500,
-          lineHeight: 1.3,
-          color: COLORS.text,
-          textAlign: "center",
-          maxWidth: 800,
-        }}>
-          {slide.label}
+
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 56 }}>
+          <div style={{ display: "flex", width: 24, height: 1, backgroundColor: COLORS.textInverseMuted }} />
+          <span style={{
+            fontFamily: FONTS.mono,
+            fontWeight: 400,
+            fontSize: 20,
+            letterSpacing: 1.2,
+            color: COLORS.textInverseMuted,
+            textTransform: "lowercase",
+          }}>source · {sourceLabel}</span>
         </div>
       </div>
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        fontFamily: FONTS.mono,
-        fontSize: 16,
-        color: COLORS.textSubtle,
-      }}>
-        Source : {sourceLabel}
-      </div>
+
+      <Footer current={index} total={total} inverse />
     </div>
   );
 }
