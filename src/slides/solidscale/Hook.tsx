@@ -36,7 +36,8 @@ export function Hook({
       position: "relative",
     }}>
       {/* D-09: backdrop derriere le texte (z-index inferieur par ordre DOM) */}
-      <Backdrop variant="hookCta" />
+      {/* slideIndex = index pour selectionner la variante de constellation (AJUST 3) */}
+      <Backdrop variant="hookCta" slideIndex={index} />
 
       <Header current={index} total={total} inverse />
 
@@ -126,26 +127,8 @@ export function Hook({
 
       </div>
 
-      {/* Niveau 5 : byline (Geist Mono muted, juste au-dessus du footer, D-10) */}
-      {slide.byline ? (
-        <div style={{
-          display: "flex",
-          paddingLeft: SPACING.rail,
-          paddingRight: SPACING.rail,
-          marginBottom: 24,
-        }}>
-          <span style={{
-            display: "flex",
-            fontFamily: FONTS.mono,
-            fontSize: TYPE.byline.size,
-            fontWeight: TYPE.byline.weight,
-            lineHeight: TYPE.byline.lineHeight,
-            color: COLORS.textMuted,
-          }}>
-            {slide.byline}
-          </span>
-        </div>
-      ) : null}
+      {/* Niveau 5 : byline retiré du render Hook (AJUST 2 — Anis 2026-06-02).
+          Le champ reste dans le schema Zod (retro-compat, usage potentiel autres templates). */}
 
       <Footer current={index} total={total} inverse />
     </div>
