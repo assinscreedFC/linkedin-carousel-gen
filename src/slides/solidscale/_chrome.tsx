@@ -303,8 +303,9 @@ const VARIANTS: ConstellationVariant[] = [
 ];
 
 export function GeometricConstellation({ variant = 0 }: { variant?: number }): React.ReactElement {
-  const hexStroke = COLORS.azurLight;   // #4A90D9 — hex doubles
-  const lineStroke = COLORS.navyMid;    // #2E6BB8 — cercles + diagonales
+  // Couleur unique azurDark #3B82F6 sur toutes les couches — electrique sur fond #050810.
+  // Hierarchie par opacite uniquement (0.18-0.35), strokeWidth inchange depuis commit precedent.
+  const stroke = COLORS.azurDark;
   const v = VARIANTS[Math.abs(variant) % VARIANTS.length];
 
   return (
@@ -314,34 +315,34 @@ export function GeometricConstellation({ variant = 0 }: { variant?: number }): R
       viewBox="0 0 1080 1350"
       style={{ display: "flex", position: "absolute", top: 0, left: 0 }}
     >
-      {/* COUCHE 1 : Lignes diagonales */}
+      {/* COUCHE 1 : Lignes diagonales — opacite 0.10 → 0.18 */}
       {v.diagonals.map(([x1, y1, x2, y2], i) => (
-        <line key={`d${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={lineStroke} strokeWidth={2.5} opacity={0.10} />
+        <line key={`d${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth={2.5} opacity={0.18} />
       ))}
 
-      {/* COUCHE 2 : Hexagones imbriques x3 — <g> SVG natif (Satori ne supporte pas React.Fragment en SVG) */}
+      {/* COUCHE 2 : Hexagones imbriques x3 — opacites 0.18→0.30 (periph) / 0.22→0.35 (focal i===1) */}
       {v.hexPairs.map(([outer, inner], i) => {
         const sw = i === 1 ? 3.5 : 3;
-        const op = i === 1 ? 0.22 : 0.18;
+        const op = i === 1 ? 0.35 : 0.30;
         return (
           <g key={`h${i}`}>
-            <polygon points={outer} fill="none" stroke={hexStroke} strokeWidth={sw} opacity={op} />
-            <polygon points={inner} fill="none" stroke={hexStroke} strokeWidth={sw} opacity={op} />
+            <polygon points={outer} fill="none" stroke={stroke} strokeWidth={sw} opacity={op} />
+            <polygon points={inner} fill="none" stroke={stroke} strokeWidth={sw} opacity={op} />
           </g>
         );
       })}
 
-      {/* COUCHE 3 : Cercles concentriques — <g> SVG natif */}
+      {/* COUCHE 3 : Cercles concentriques — opacites 0.15→0.25 (pleins) / 0.15→0.22 (dashed outer) / 0.12→0.18 (dashed seul) */}
       {v.circles.map((c, i) => (
         <g key={`c${i}`}>
           {!c.dashed && (
-            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={3} opacity={0.15} />
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={stroke} strokeWidth={3} opacity={0.25} />
           )}
           {c.r2 && (
-            <circle cx={c.cx} cy={c.cy} r={c.r2} fill="none" stroke={lineStroke} strokeWidth={2.5} strokeDasharray="15 12" opacity={0.15} />
+            <circle cx={c.cx} cy={c.cy} r={c.r2} fill="none" stroke={stroke} strokeWidth={2.5} strokeDasharray="15 12" opacity={0.22} />
           )}
           {c.dashed && !c.r2 && (
-            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={2.5} strokeDasharray="18 12" opacity={0.12} />
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={stroke} strokeWidth={2.5} strokeDasharray="18 12" opacity={0.18} />
           )}
         </g>
       ))}
