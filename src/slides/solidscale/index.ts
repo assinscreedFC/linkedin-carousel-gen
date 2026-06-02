@@ -1,6 +1,6 @@
 // src/slides/solidscale/index.ts
 // Barrel + template dispatcher for SolidScale-branded slides.
-// Consumed by Plan 04 render pipeline (renderSlide → satori → SVG → PNG → PDF).
+// index and total threaded through for page indicator chrome.
 
 import React from "react";
 import type { Slide } from "../../spec/schema";
@@ -11,11 +11,11 @@ import { CTA } from "./CTA";
 
 export { Hook, Stat, FrameworkStep, CTA };
 
-export function renderSlide(slide: Slide): React.ReactElement {
+export function renderSlide(slide: Slide, index = 0, total = 1): React.ReactElement {
   switch (slide.template) {
-    case "Hook": return Hook({ slide });
-    case "Stat": return Stat({ slide });
-    case "FrameworkStep": return FrameworkStep({ slide });
-    case "CTA": return CTA({ slide });
+    case "Hook": return Hook({ slide, index, total });
+    case "Stat": return Stat({ slide, index, total });
+    case "FrameworkStep": return FrameworkStep({ slide, index, total });
+    case "CTA": return CTA({ slide, index, total });
   }
 }

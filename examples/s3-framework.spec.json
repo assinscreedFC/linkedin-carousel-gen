@@ -5,42 +5,42 @@
   "slides": [
     {
       "template": "Hook",
-      "eyebrow": "METHODE SOLIDSCALE",
-      "title": "S3 Framework : trois etapes pour deployer l'IA dans votre entreprise sans gaspiller"
+      "eyebrow": "MÉTHODE SOLIDSCALE",
+      "title": "S3 Framework : trois étapes pour déployer l'IA dans votre entreprise sans gaspiller"
     },
     {
       "template": "Hook",
-      "eyebrow": "PIEGE COURANT",
-      "title": "Lancer cinq projets IA en meme temps brule le budget et la confiance des equipes"
+      "eyebrow": "PIÈGE COURANT",
+      "title": "Lancer cinq projets IA en même temps brûle le budget et la confiance des équipes"
     },
     {
       "template": "FrameworkStep",
       "step": "Scan",
-      "headline": "Cartographiez l'usage reel avant de proposer un outil",
-      "body": "Vos equipes utilisent deja ChatGPT, Copilot ou Gemini hors cadre. Ce Scan recense les usages, identifie un cas a forte valeur et fixe l'indicateur de retour des le depart."
+      "headline": "Cartographiez l'usage réel avant de proposer un outil",
+      "body": "Vos équipes utilisent déjà ChatGPT, Copilot ou Gemini hors cadre. Ce Scan recense les usages, identifie un cas à forte valeur et fixe l'indicateur de retour dès le départ."
     },
     {
       "template": "FrameworkStep",
       "step": "Solve",
-      "headline": "Livrez un seul cas en quatre a huit semaines",
-      "body": "Un sprint court transforme le processus identifie en outil utilisable. Le perimetre reste etroit pour mesurer l'impact reel, pas la promesse."
+      "headline": "Livrez un seul cas en quatre à huit semaines",
+      "body": "Un sprint court transforme le processus identifié en outil utilisable. Le périmètre reste étroit pour mesurer l'impact réel, pas la promesse."
     },
     {
       "template": "FrameworkStep",
       "step": "Scale",
-      "headline": "Etendez quand les chiffres prouvent l'usage",
-      "body": "Une fois le premier cas valide, le perimetre s'etend service par service. L'IA de l'ombre devient un usage pilote, securise, coherent."
+      "headline": "Étendez quand les chiffres prouvent l'usage",
+      "body": "Une fois le premier cas validé, le périmètre s'étend service par service. L'IA de l'ombre devient un usage piloté, sécurisé, cohérent."
     },
     {
       "template": "Stat",
       "figure": "55%",
-      "label": "des TPE et PME francaises utilisent l'IA generative fin 2025, contre 31% un an plus tot",
+      "label": "des entreprises françaises utilisent l'IA générative fin 2025, contre 31% un an plus tôt",
       "source": "https://presse.bpifrance.fr"
     },
     {
       "template": "Stat",
       "figure": "44%",
-      "label": "de la population active francaise utilise l'IA generative fin 2025",
+      "label": "de la population active française utilise l'IA générative fin 2025",
       "source": "https://blogs.microsoft.com/on-the-issues/2026/01/08/global-ai-adoption-in-2025"
     },
     {

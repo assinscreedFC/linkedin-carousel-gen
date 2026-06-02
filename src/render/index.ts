@@ -16,8 +16,9 @@ export async function renderCarousel(
   outPath: string,
 ): Promise<{ pageCount: number; sizeBytes: number }> {
   const pngs: Uint8Array[] = [];
-  for (const slide of spec.slides) {
-    const jsx = renderSlide(slide);
+  const total = spec.slides.length;
+  for (let i = 0; i < total; i++) {
+    const jsx = renderSlide(spec.slides[i], i, total);
     const svg = await renderToSvg(jsx, spec.format);
     const png = svgToPng(svg);
     pngs.push(png);
