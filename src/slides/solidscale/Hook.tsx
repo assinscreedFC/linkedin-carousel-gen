@@ -32,7 +32,7 @@ export function Hook({
       flexDirection: "column",
       width: "100%",
       height: "100%",
-      backgroundColor: COLORS.bgNavy,
+      backgroundColor: COLORS.bg,
       position: "relative",
     }}>
       {/* D-09: backdrop derriere le texte (z-index inferieur par ordre DOM) */}
