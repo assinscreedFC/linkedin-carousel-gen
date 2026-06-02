@@ -89,7 +89,7 @@ export function Header({
       paddingTop: 56,
     }}>
       <BrandMark inverse={inverse} />
-      <PageDots current={current} total={total} inverse={inverse} />
+      {/* PageDots retiré (AJUST 1 — Anis 2026-06-02 : "les points qui se deplacent quand on slide") */}
     </div>
   );
 }
@@ -179,13 +179,133 @@ export function IsoHexPrism({
   );
 }
 
-// Constellation geometrique multi-couches (Phase 12.1-04 v2).
+// Constellation geometrique multi-couches (Phase 12.1-04 v3).
 // Remplace IsoHexPrism sur les slides Hook/CTA.
 // Reference visuelle : hero "A propos" solidscale.tech.
-// D-06: positions fixes, pattern sur TOUT le canvas, meme fond sur chaque slide.
-export function GeometricConstellation(): React.ReactElement {
+// D-06 v3: 5 variantes deterministes, selection par (slideNumber - 1) % 5.
+// Effet "flipbook" quand l'utilisateur swipe les slides du carrousel.
+// Regles visuelles : meme palette, meme densite, lisibilite texte preservee sur toutes variantes.
+
+type ConstellationVariant = {
+  // Diagonales : [x1, y1, x2, y2][]
+  diagonals: [number, number, number, number][];
+  // Hex doubles : [outer points, inner points][] — chaque hex = pointsString flat-top
+  hexPairs: [string, string][];
+  // Cercles : [cx, cy, r, dashed?][]
+  circles: { cx: number; cy: number; r: number; dashed?: boolean; r2?: number }[];
+};
+
+const VARIANTS: ConstellationVariant[] = [
+  // Variant 0 : configuration v3 reference (originale validee Anis)
+  {
+    diagonals: [
+      [0, 1180, 1080, 180],
+      [0, 180, 1080, 1180],
+    ],
+    hexPairs: [
+      // Hex haut-gauche
+      ["120,120 195,78 270,120 270,204 195,246 120,204", "165,150 210,126 255,150 255,192 210,216 165,192"],
+      // Hex central focal
+      ["420,480 600,384 780,480 780,672 600,768 420,672", "465,510 600,438 735,510 735,642 600,714 465,642"],
+      // Hex bas-droite
+      ["750,1110 855,1050 960,1110 960,1230 855,1290 750,1230", "790,1135 855,1095 920,1135 920,1215 855,1255 790,1215"],
+    ],
+    circles: [
+      { cx: 930, cy: 180, r: 135, r2: 210 },
+      { cx: 150, cy: 720, r: 105, r2: 165 },
+      { cx: 990, cy: 1240, r: 120, dashed: true },
+    ],
+  },
+
+  // Variant 1 : miroir horizontal (hex deplacees vers la droite / gauche inversees)
+  {
+    diagonals: [
+      [0, 180, 1080, 1180],
+      [0, 675, 1080, 675],
+    ],
+    hexPairs: [
+      // Hex haut-droite
+      ["810,120 885,78 960,120 960,204 885,246 810,204", "855,150 900,126 945,150 945,192 900,216 855,192"],
+      // Hex central focal (meme position, ca reste le focal)
+      ["420,480 600,384 780,480 780,672 600,768 420,672", "465,510 600,438 735,510 735,642 600,714 465,642"],
+      // Hex bas-gauche
+      ["120,1110 225,1050 330,1110 330,1230 225,1290 120,1230", "160,1135 225,1095 290,1135 290,1215 225,1255 160,1215"],
+    ],
+    circles: [
+      { cx: 150, cy: 180, r: 135, r2: 210 },
+      { cx: 930, cy: 720, r: 105, r2: 165 },
+      { cx: 90, cy: 1240, r: 120, dashed: true },
+    ],
+  },
+
+  // Variant 2 : miroir vertical (haut <-> bas)
+  {
+    diagonals: [
+      [0, 1180, 1080, 180],
+      [540, 0, 540, 1350],
+    ],
+    hexPairs: [
+      // Hex bas-gauche
+      ["120,1104 195,1062 270,1104 270,1188 195,1230 120,1188", "165,1134 210,1110 255,1134 255,1176 210,1200 165,1176"],
+      // Hex central focal
+      ["420,480 600,384 780,480 780,672 600,768 420,672", "465,510 600,438 735,510 735,642 600,714 465,642"],
+      // Hex haut-droite (plus petit)
+      ["750,120 855,60 960,120 960,240 855,300 750,240", "790,145 855,105 920,145 920,225 855,265 790,225"],
+    ],
+    circles: [
+      { cx: 930, cy: 1170, r: 135, r2: 210 },
+      { cx: 150, cy: 630, r: 105, r2: 165 },
+      { cx: 90, cy: 110, r: 120, dashed: true },
+    ],
+  },
+
+  // Variant 3 : rotation 180deg (miroir H + V combines)
+  {
+    diagonals: [
+      [0, 180, 1080, 1180],
+      [0, 1180, 1080, 180],
+    ],
+    hexPairs: [
+      // Hex bas-droite
+      ["810,1104 885,1062 960,1104 960,1188 885,1230 810,1188", "855,1134 900,1110 945,1134 945,1176 900,1200 855,1176"],
+      // Hex central focal (decale vers le bas pour la var)
+      ["300,580 480,484 660,580 660,772 480,868 300,772", "345,610 480,538 615,610 615,742 480,814 345,742"],
+      // Hex haut-gauche (petit)
+      ["120,120 225,60 330,120 330,240 225,300 120,240", "160,145 225,105 290,145 290,225 225,265 160,225"],
+    ],
+    circles: [
+      { cx: 150, cy: 1170, r: 135, r2: 210 },
+      { cx: 930, cy: 630, r: 105, r2: 165 },
+      { cx: 990, cy: 110, r: 120, dashed: true },
+    ],
+  },
+
+  // Variant 4 : densite haute (formes concentrees zone haute, diagonale unique oblique)
+  {
+    diagonals: [
+      [0, 900, 1080, 0],
+      [0, 0, 1080, 900],
+    ],
+    hexPairs: [
+      // Hex haut-gauche (grand)
+      ["60,60 195,0 330,60 330,240 195,300 60,240", "100,85 195,38 290,85 290,215 195,262 100,215"],
+      // Hex haut-droite (medium)
+      ["750,120 855,60 960,120 960,240 855,300 750,240", "790,145 855,105 920,145 920,225 855,265 790,225"],
+      // Hex bas-centre (petit, ancrage bas)
+      ["450,1080 540,1032 630,1080 630,1176 540,1224 450,1176", "480,1100 540,1072 600,1100 600,1156 540,1184 480,1156"],
+    ],
+    circles: [
+      { cx: 540, cy: 220, r: 150, r2: 240 },
+      { cx: 150, cy: 540, r: 90, r2: 145 },
+      { cx: 930, cy: 1100, r: 110, dashed: true },
+    ],
+  },
+];
+
+export function GeometricConstellation({ variant = 0 }: { variant?: number }): React.ReactElement {
   const hexStroke = COLORS.azurLight;   // #4A90D9 — hex doubles
   const lineStroke = COLORS.navyMid;    // #2E6BB8 — cercles + diagonales
+  const v = VARIANTS[Math.abs(variant) % VARIANTS.length];
 
   return (
     <svg
@@ -194,64 +314,50 @@ export function GeometricConstellation(): React.ReactElement {
       viewBox="0 0 1080 1350"
       style={{ display: "flex", position: "absolute", top: 0, left: 0 }}
     >
-      {/* COUCHE 1 : Lignes diagonales croisees — traversent tout le canvas */}
-      <line x1={0} y1={1180} x2={1080} y2={180} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
-      <line x1={0} y1={180} x2={1080} y2={1180} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
+      {/* COUCHE 1 : Lignes diagonales */}
+      {v.diagonals.map(([x1, y1, x2, y2], i) => (
+        <line key={`d${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
+      ))}
 
-      {/* COUCHE 2 : Hexagones imbriques (outer + inner) x3 */}
+      {/* COUCHE 2 : Hexagones imbriques x3 — <g> SVG natif (Satori ne supporte pas React.Fragment en SVG) */}
+      {v.hexPairs.map(([outer, inner], i) => {
+        const sw = i === 1 ? 2 : 1.5;
+        const op = i === 1 ? 0.22 : 0.18;
+        return (
+          <g key={`h${i}`}>
+            <polygon points={outer} fill="none" stroke={hexStroke} strokeWidth={sw} opacity={op} />
+            <polygon points={inner} fill="none" stroke={hexStroke} strokeWidth={sw} opacity={op} />
+          </g>
+        );
+      })}
 
-      {/* Hex haut-gauche */}
-      <polygon
-        points="120,120 195,78 270,120 270,204 195,246 120,204"
-        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
-      />
-      <polygon
-        points="165,150 210,126 255,150 255,192 210,216 165,192"
-        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
-      />
-
-      {/* Hex central focal (plus grand) */}
-      <polygon
-        points="420,480 600,384 780,480 780,672 600,768 420,672"
-        fill="none" stroke={hexStroke} strokeWidth={2} opacity={0.22}
-      />
-      <polygon
-        points="465,510 600,438 735,510 735,642 600,714 465,642"
-        fill="none" stroke={hexStroke} strokeWidth={2} opacity={0.22}
-      />
-
-      {/* Hex bas-droite (plus petit) */}
-      <polygon
-        points="750,1110 855,1050 960,1110 960,1230 855,1290 750,1230"
-        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
-      />
-      <polygon
-        points="790,1135 855,1095 920,1135 920,1215 855,1255 790,1215"
-        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
-      />
-
-      {/* COUCHE 3 : Cercles concentriques (plein + pointille) x3 */}
-
-      {/* Haut-droite */}
-      <circle cx={930} cy={180} r={135} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.15} />
-      <circle cx={930} cy={180} r={210} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="15 12" opacity={0.15} />
-
-      {/* Gauche-mid */}
-      <circle cx={150} cy={720} r={105} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.12} />
-      <circle cx={150} cy={720} r={165} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="12 12" opacity={0.12} />
-
-      {/* Bas-droite (pointille uniquement) */}
-      <circle cx={990} cy={1240} r={120} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="18 12" opacity={0.12} />
+      {/* COUCHE 3 : Cercles concentriques — <g> SVG natif */}
+      {v.circles.map((c, i) => (
+        <g key={`c${i}`}>
+          {!c.dashed && (
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.15} />
+          )}
+          {c.r2 && (
+            <circle cx={c.cx} cy={c.cy} r={c.r2} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="15 12" opacity={0.15} />
+          )}
+          {c.dashed && !c.r2 && (
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="18 12" opacity={0.12} />
+          )}
+        </g>
+      ))}
     </svg>
   );
 }
 
 // Backdrop v3 : fond #050810 (theme B) + gradient radial bleu v10 (Hook validation) +
 // GeometricConstellation en overlay (couche suppletive, z-index DOM intermediaire).
-// D-06: positions fixes, gradient radial restaure (valide par Anis en v10).
+// D-06 v3: constellationVariant derive de slideIndex pour effet flipbook au swipe.
 export function Backdrop({
   variant,
-}: { variant: "hookCta" | "step" }): React.ReactElement {
+  slideIndex = 0,
+}: { variant: "hookCta" | "step"; slideIndex?: number }): React.ReactElement {
+  const constellationVariant = slideIndex % VARIANTS.length;
+
   if (variant === "hookCta") {
     // Fond bg #050810 + radial-gradient azurDark + cobalt (v10 restaure) + constellation overlay.
     return (
@@ -269,7 +375,7 @@ export function Backdrop({
             "radial-gradient(circle at 22% 60%, rgba(46,107,184,0.45) 0%, rgba(46,107,184,0.08) 30%, rgba(5,8,16,0) 55%)",
         }}
       >
-        <GeometricConstellation />
+        <GeometricConstellation variant={constellationVariant} />
       </div>
     );
   }
@@ -286,7 +392,7 @@ export function Backdrop({
         backgroundColor: COLORS.bg,
       }}
     >
-      <GeometricConstellation />
+      <GeometricConstellation variant={constellationVariant} />
     </div>
   );
 }
