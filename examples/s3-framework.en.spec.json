@@ -1,0 +1,53 @@
+{
+  "slug": "s3-framework-en",
+  "date": "2026-06-08",
+  "format": "portrait",
+  "slides": [
+    {
+      "template": "Hook",
+      "kicker": "SOLIDSCALE METHOD",
+      "title": "S3 Framework: three steps to deploy AI in your company without wasting budget"
+    },
+    {
+      "template": "Hook",
+      "kicker": "COMMON MISTAKE",
+      "title": "Launching five AI projects at once burns budget and erodes team confidence"
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Scan",
+      "headline": "Map real usage before proposing a tool",
+      "body": "Your teams already use ChatGPT, Copilot or Gemini outside any framework. The Scan inventories those uses, identifies one high-value case and sets the ROI indicator from day one."
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Solve",
+      "headline": "Deliver one case in four to eight weeks",
+      "body": "A short sprint turns the identified process into a usable tool. The scope stays narrow so real impact can be measured, not just promised."
+    },
+    {
+      "template": "FrameworkStep",
+      "step": "Scale",
+      "headline": "Expand when the numbers prove adoption",
+      "body": "Once the first case is validated, the scope extends department by department. Shadow AI becomes a piloted, secure, coherent practice."
+    },
+    {
+      "template": "Stat",
+      "figure": "55%",
+      "label": "of French companies use generative AI at end of 2025, up from 31% one year earlier",
+      "source": "https://presse.bpifrance.fr"
+    },
+    {
+      "template": "Stat",
+      "figure": "44%",
+      "label": "of the French working population uses generative AI at end of 2025",
+      "source": "https://blogs.microsoft.com/on-the-issues/2026/01/08/global-ai-adoption-in-2025"
+    }
+  ],
+  "pipeline_applied": {
+    "audit_score": 0,
+    "audit_skill": "great-web-copy/audit-copy",
+    "humanizer": "no",
+    "humanizer_date": null
+  }
+}

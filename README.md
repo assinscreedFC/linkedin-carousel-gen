@@ -86,19 +86,72 @@ Côté portfolio, le script optionnel `pnpm carousel:gen <spec>` shell-out vers 
 
 ### Hook
 
-Slide de couverture. Champs : `title` (max 140), `eyebrow` (max 60, optionnel). Sert d'accroche, vocabulaire S3 ou question directe à dirigeant d'entreprise.
+Slide de couverture (bookend narratif). Champs Zod :
+
+| Champ | Type | Requis | Description |
+| ----- | ---- | ------ | ----------- |
+| `kicker` | string | non | Label court au-dessus du titre (ex. "MÉTHODE SOLIDSCALE") |
+| `title` | string | oui | Titre principal, max 140 caractères |
+| `subtitle` | string | non | Sous-titre support |
+| `byline` | string | non | Auteur (conservé en schema, non rendu actuellement) |
+| `tags` | string[] | non | Mots-clés (conservés en schema, non rendus actuellement) |
+| `readingTime` | string | non | Temps de lecture (conservé en schema, non rendu actuellement) |
+
+Utiliser un vocabulaire S3 ou une question directe à dirigeant d'entreprise. Deux slides Hook au maximum (ouverture + tension).
 
 ### Stat
 
-Chiffre source de vérité. Champs : `figure` (ex. "44%"), `label` (contexte court), `source` (URL obligatoire). Tout chiffre est sourcé, jamais inventé (cf. mémoire `feedback_chiffres_source_verite.md`).
+Chiffre source de vérité. Tout chiffre est sourcé, jamais inventé. Champs Zod :
+
+| Champ | Type | Requis | Description |
+| ----- | ---- | ------ | ----------- |
+| `figure` | string | oui | Chiffre mis en avant (ex. "55%") |
+| `label` | string | oui | Contexte du chiffre, max 120 caractères |
+| `subLabel` | string | non | Nuance ou précision complémentaire |
+| `comparator` | string | non | Point de comparaison (ex. "contre 31% un an plus tôt") |
+| `source` | string (URL) | oui | URL de la source, obligatoire en Zod (gate `feedback_chiffres_source_verite`) |
 
 ### FrameworkStep
 
-Étape du S3 Framework. Champs : `step` (enum Scan, Solve, Scale), `headline`, `body`. Trois slides FrameworkStep maximum par carrousel pour respecter le pacing Caleb.
+Étape du S3 Framework. Maximum 3 slides FrameworkStep par carrousel (pacing Caleb). Champs Zod :
+
+| Champ | Type | Requis | Description |
+| ----- | ---- | ------ | ----------- |
+| `step` | "Scan" | "Solve" | "Scale" | oui | Étape du S3 Framework |
+| `headline` | string | oui | Titre de l'étape |
+| `body` | string | oui | Explication courte, 2-3 phrases max |
+| `calloutQuote` | string | non | Citation ou chiffre mis en relief |
+| `microAnnotation` | string | non | Note bas de slide (source, précision) |
 
 ### CTA
 
-Appel final vers l'audit gratuit 30 min. Champs : `headline`, `cta_label` (ex. "Audit gratuit 30 min"), `url` (défaut `https://solidscale.tech`). Jamais de lien Calendly nu : on passe toujours par solidscale.tech.
+Appel final vers l'audit gratuit 30 min. Jamais de lien Calendly direct : toujours via solidscale.tech. Champs Zod :
+
+| Champ | Type | Requis | Description |
+| ----- | ---- | ------ | ----------- |
+| `kicker` | string | non | Accroche courte (ex. "PROCHAINE ÉTAPE") |
+| `headline` | string | oui | Message principal du CTA |
+| `subtitle` | string | non | Contexte ou garantie (ex. "30 min, sans engagement") |
+| `ctaLabel` | string | oui | Texte du bouton (ex. "Audit gratuit 30 min") |
+| `urlDisplay` | string | oui | URL affichée (ex. "solidscale.tech") |
+| `urlReal` | string | oui | URL réelle cible |
+| `signature` | string | non | Signature ou tagline conclusive |
+
+Source de vérité : `src/spec/schema.ts` (schéma Zod versionné).
+
+## Design system
+
+Source de vérité visuelle : `../portfolio/docs/design-carousels.md` (repo portfolio sibling).
+
+Ce document décrit le mood, la hiérarchie typographique 7 niveaux (kicker, title, subtitle, body, stat, meta, footer), la forme signature constellation géométrique multi-couches (5 variantes déterministes par `slideIndex % 5`), le layout grid éditorial et les anti-patterns bloquants. Ne pas dupliquer dans ce fork pour éviter la dérive.
+
+Anti-patterns bloquants (extrait) :
+
+- Gradient purple/violet/pink
+- Glassmorphism décoratif
+- Néon glow / drop-shadow néon
+- Em dash (signal IA #1) : utiliser virgule, deux-points ou parenthèses
+- Lorem ipsum ou chiffres non sourcés
 
 ## Format JSON spec
 
@@ -123,6 +176,14 @@ Appel final vers l'audit gratuit 30 min. Champs : `headline`, `cta_label` (ex. "
 
 Validation Zod stricte dans `src/spec/schema.ts`. Le marker `pipeline_applied` est traçable, écrit par le skill `solidscale-carousel` après couche 5.
 
+## Exemples
+
+| Fichier | Langue | Description |
+| ------- | ------ | ----------- |
+| `examples/s3-framework.spec.json` | FR | Carrousel S3 Framework (7 slides : Hook x2, FrameworkStep x3, Stat x2) |
+| `examples/france-adoption-ia-generative.spec.json` | FR | Adoption IA générative en France (fixture CI e2e) |
+| `examples/s3-framework.en.spec.json` | EN | S3 Framework anglais (stub minimal, à enrichir) |
+
 ## Tests
 
 ```bash
@@ -137,7 +198,9 @@ Snapshots PNG dans `tests/snapshots/`. À régénérer sur Linux uniquement (Pit
 
 ## CI
 
-GitHub Actions verrouillée sur ubuntu-latest (`.github/workflows/ci.yml`) :
+Deux workflows GitHub Actions sur ubuntu-latest.
+
+**`.github/workflows/ci.yml`** (sur chaque push main et PR) :
 
 - bun install (frozen-lockfile)
 - typecheck, lint, format check
@@ -146,6 +209,13 @@ GitHub Actions verrouillée sur ubuntu-latest (`.github/workflows/ci.yml`) :
 - smoke E2E : `bun run gen examples/france-adoption-ia-generative.spec.json`
 - garde taille : PDF > 10 KB et < 100 MB
 - PDF artifact uploadé pour inspection (rétention 7 jours)
+
+**`.github/workflows/snapshots.yml`** (sur push `snapshots-v*` ou `workflow_dispatch`) :
+
+- Régénère les 4 PNG baselines via `bun run scripts/generate-snapshots.ts`
+- Commite et pousse les PNG sur la branche (ubuntu-latest uniquement, Pitfall 4)
+- Artefacts uploadés 14 jours pour inspection visuelle
+- Prérequis : secret `SNAPSHOTS_TOKEN` (PAT repo write) ou activer "Allow GitHub Actions to write" dans Settings > Actions > General
 
 ## Workflow recommandé
 
