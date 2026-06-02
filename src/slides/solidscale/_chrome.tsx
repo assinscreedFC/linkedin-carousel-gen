@@ -135,11 +135,8 @@ export function Footer({
   );
 }
 
-// Isometric wireframe hexagonal prism : 3D-feel polyhedron in line art.
-// Mood tech architecture, hexagon as 3D structure not flat shape.
-// D-08: strokeWidth fixed at 2 (not 4), opacity 0.6-0.8, size parametric (D-07).
-// D-06: position (cx, cy) fixed per Backdrop variant — never varied arbitrarily.
-function IsoHexPrism({
+// Isometric wireframe hexagonal prism — conserve pour retrocompat eventuelle (non utilise dans Hook/CTA v2).
+export function IsoHexPrism({
   cx,
   cy,
   size,
@@ -155,7 +152,6 @@ function IsoHexPrism({
   strokeWidth?: number;
 }): React.ReactElement {
   const c = color ?? COLORS.azurDark;
-  // Top hex (pointy-top) + bottom hex offset for depth + connecting lines.
   const r = size / 2;
   const offsetY = r * 0.6;
   const top = [
@@ -183,18 +179,80 @@ function IsoHexPrism({
   );
 }
 
-// Atmospheric backdrop per D-05/D-06/D-07/D-08/D-09.
-// ONE visual language: iso hex prism wireframe only. No constellation, dots, mesh, grid.
-// Position is FIXED per variant (D-06). Size is hierarchized (D-07):
-//   hookCta : grand (size=520, cx=820, cy=280) — slides bookend, focal signature
-//   step     : petit (size=100, cx=970, cy=1230) — slides milieu, accent discret
-// Gradient rgba values are derived from COLORS.azurDark (#3B82F6) and COLORS.cobalt (#2E6BB8).
-// Added to tokens.ts as GRADIENT_RGBA_ACCENT / GRADIENT_RGBA_COBALT to satisfy D-10a allowlist.
+// Constellation geometrique multi-couches (Phase 12.1-04 v2).
+// Remplace IsoHexPrism sur les slides Hook/CTA.
+// Reference visuelle : hero "A propos" solidscale.tech.
+// D-06: positions fixes, pattern sur TOUT le canvas, meme fond sur chaque slide.
+export function GeometricConstellation(): React.ReactElement {
+  const hexStroke = COLORS.azurLight;   // #4A90D9 — hex doubles
+  const lineStroke = COLORS.navyMid;    // #2E6BB8 — cercles + diagonales
+
+  return (
+    <svg
+      width={1080}
+      height={1350}
+      viewBox="0 0 1080 1350"
+      style={{ display: "flex", position: "absolute", top: 0, left: 0 }}
+    >
+      {/* COUCHE 1 : Lignes diagonales croisees — traversent tout le canvas */}
+      <line x1={0} y1={1180} x2={1080} y2={180} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
+      <line x1={0} y1={180} x2={1080} y2={1180} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
+
+      {/* COUCHE 2 : Hexagones imbriques (outer + inner) x3 */}
+
+      {/* Hex haut-gauche */}
+      <polygon
+        points="120,120 195,78 270,120 270,204 195,246 120,204"
+        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
+      />
+      <polygon
+        points="165,150 210,126 255,150 255,192 210,216 165,192"
+        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
+      />
+
+      {/* Hex central focal (plus grand) */}
+      <polygon
+        points="420,480 600,384 780,480 780,672 600,768 420,672"
+        fill="none" stroke={hexStroke} strokeWidth={2} opacity={0.22}
+      />
+      <polygon
+        points="465,510 600,438 735,510 735,642 600,714 465,642"
+        fill="none" stroke={hexStroke} strokeWidth={2} opacity={0.22}
+      />
+
+      {/* Hex bas-droite (plus petit) */}
+      <polygon
+        points="750,1110 855,1050 960,1110 960,1230 855,1290 750,1230"
+        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
+      />
+      <polygon
+        points="790,1135 855,1095 920,1135 920,1215 855,1255 790,1215"
+        fill="none" stroke={hexStroke} strokeWidth={1.5} opacity={0.18}
+      />
+
+      {/* COUCHE 3 : Cercles concentriques (plein + pointille) x3 */}
+
+      {/* Haut-droite */}
+      <circle cx={930} cy={180} r={135} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.15} />
+      <circle cx={930} cy={180} r={210} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="15 12" opacity={0.15} />
+
+      {/* Gauche-mid */}
+      <circle cx={150} cy={720} r={105} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.12} />
+      <circle cx={150} cy={720} r={165} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="12 12" opacity={0.12} />
+
+      {/* Bas-droite (pointille uniquement) */}
+      <circle cx={990} cy={1240} r={120} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="18 12" opacity={0.12} />
+    </svg>
+  );
+}
+
+// Backdrop v2 : fond navy mid + GeometricConstellation pour Hook/CTA,
+// fond bg + constellation discrete pour step.
+// D-06: positions fixes, pas de gradient radial bleu fort (supprime sur hookCta).
 export function Backdrop({
   variant,
 }: { variant: "hookCta" | "step" }): React.ReactElement {
   if (variant === "hookCta") {
-    // D-07: grand prism haut-droit (bookend Hook/CTA). Gradient accent radial light.
     return (
       <div
         style={{
@@ -204,17 +262,14 @@ export function Backdrop({
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundImage:
-            "radial-gradient(circle at 80% 18%, rgba(59,130,246,0.55) 0%, rgba(59,130,246,0.12) 32%, rgba(5,8,16,0) 60%), " +
-            "radial-gradient(circle at 22% 60%, rgba(46,107,184,0.45) 0%, rgba(46,107,184,0.08) 30%, rgba(5,8,16,0) 55%)",
+          backgroundColor: COLORS.bgNavy,
         }}
       >
-        {/* Grand prism haut-droit : size=520, cx=820, cy=280 (D-07 bookend) */}
-        <IsoHexPrism cx={820} cy={280} size={520} opacity={0.7} strokeWidth={2} />
+        <GeometricConstellation />
       </div>
     );
   }
-  // variant === "step" : fond uni COLORS.bg, petit prism bas-droit discret (D-07 milieu)
+  // variant === "step" : fond uni COLORS.bg, constellation discrete
   return (
     <div
       style={{
@@ -226,8 +281,7 @@ export function Backdrop({
         height: "100%",
       }}
     >
-      {/* Petit prism bas-droit : size=100, cx=970, cy=1230 (D-07 milieu) */}
-      <IsoHexPrism cx={970} cy={1230} size={100} opacity={0.65} strokeWidth={2} />
+      <GeometricConstellation />
     </div>
   );
 }
