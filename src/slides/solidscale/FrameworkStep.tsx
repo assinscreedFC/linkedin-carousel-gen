@@ -1,8 +1,9 @@
 // src/slides/solidscale/FrameworkStep.tsx
-// SolidScale FrameworkStep template v2 (Phase 12.1-05).
+// SolidScale FrameworkStep template v3 (Phase 12.1-05 unification).
 // D-10: step / headline / body / calloutQuote? / microAnnotation?
 // Mood: Artisan technique sombre — layout asymetrique, constellation variant step.
 // slideIndex transmis au Backdrop pour variante constellation deterministe (AJUST 3 Phase 12.1-04).
+// AJUST 1 propagated: barre de progression 3 segments retires (unification chrome v3).
 
 import React from "react";
 import { COLORS, FONTS, TYPE, SPACING } from "../../tokens";
@@ -10,12 +11,6 @@ import type { Slide } from "../../spec/schema";
 import { Header, Footer, Backdrop } from "./_chrome";
 
 type FrameworkStepSlide = Extract<Slide, { template: "FrameworkStep" }>;
-
-const STEP_INDEX: Record<FrameworkStepSlide["step"], number> = {
-  Scan: 0,
-  Solve: 1,
-  Scale: 2,
-};
 
 export function FrameworkStep({
   slide,
@@ -26,8 +21,6 @@ export function FrameworkStep({
   index: number;
   total: number;
 }): React.ReactElement {
-  const stepIdx = STEP_INDEX[slide.step];
-
   return (
     <div style={{
       display: "flex",
@@ -51,33 +44,19 @@ export function FrameworkStep({
         paddingTop: 64,
       }}>
 
-        {/* Eyebrow S3 : Geist Mono uppercase azurDark */}
+        {/* Kicker S3 : Geist Mono uppercase azurDark — aligne sur Hook/CTA/Stat (TYPE.kicker, AJUST unification 12.1-05) */}
         <div style={{
           display: "flex",
           fontFamily: FONTS.mono,
-          fontSize: TYPE.eyebrow.size,
-          fontWeight: 500,
-          letterSpacing: TYPE.eyebrow.tracking,
+          fontSize: TYPE.kicker.size,
+          fontWeight: TYPE.kicker.weight,
+          lineHeight: TYPE.kicker.lineHeight,
+          letterSpacing: TYPE.kicker.tracking,
           color: COLORS.azurDark,
           textTransform: "uppercase",
-          marginBottom: 24,
+          marginBottom: 32,
         }}>
           {`S3 · ${slide.step.toUpperCase()}`}
-        </div>
-
-        {/* Barre de progression 3 segments */}
-        <div style={{ display: "flex", gap: 12, marginBottom: 40 }}>
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                width: 96,
-                height: 6,
-                backgroundColor: i <= stepIdx ? COLORS.azurDark : COLORS.border,
-              }}
-            />
-          ))}
         </div>
 
         {/* headline */}
