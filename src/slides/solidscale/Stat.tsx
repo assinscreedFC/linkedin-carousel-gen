@@ -53,13 +53,14 @@ export function Stat({
         paddingTop: 64,
       }}>
 
-        {/* Eyebrow : Geist Mono uppercase azurDark */}
+        {/* Kicker : Geist Mono uppercase azurDark — aligne sur Hook/CTA (TYPE.kicker, AJUST unification 12.1-05) */}
         <div style={{
           display: "flex",
           fontFamily: FONTS.mono,
-          fontSize: TYPE.eyebrow.size,
-          fontWeight: 500,
-          letterSpacing: TYPE.eyebrow.tracking,
+          fontSize: TYPE.kicker.size,
+          fontWeight: TYPE.kicker.weight,
+          lineHeight: TYPE.kicker.lineHeight,
+          letterSpacing: TYPE.kicker.tracking,
           color: COLORS.azurDark,
           textTransform: "uppercase",
           marginBottom: 32,
