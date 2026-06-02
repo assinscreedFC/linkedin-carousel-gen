@@ -9,12 +9,17 @@ on:
 jobs:
   regen:
     runs-on: ubuntu-latest
+    # Requires: Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests" = ON
+    # OR: add a PAT secret SNAPSHOTS_TOKEN with repo write scope.
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
         with:
-          # token avec droit write pour que le bot puisse commiter
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # SNAPSHOTS_TOKEN = PAT with repo write scope (fallback to GITHUB_TOKEN)
+          # Si SNAPSHOTS_TOKEN absent, activer "Allow GitHub Actions to write" dans Settings > Actions > General
+          token: ${{ secrets.SNAPSHOTS_TOKEN || secrets.GITHUB_TOKEN }}
           lfs: true
 
       - name: Setup Bun
