@@ -303,9 +303,10 @@ const VARIANTS: ConstellationVariant[] = [
 ];
 
 export function GeometricConstellation({ variant = 0 }: { variant?: number }): React.ReactElement {
-  // Couleur unique electricBlue #60A5FA sur toutes les couches — encore plus electrique sur fond #050810.
-  // Hierarchie par opacite uniquement (0.18-0.35), strokeWidth inchange depuis commit precedent.
-  const stroke = COLORS.electricBlue;
+  // Couleur cobaltTw #2563EB (Tailwind blue-600, palette officielle SolidScale DESIGN.md).
+  // Test Anis "essaye du cobalte" — Phase 12.1-04. Rollback : COLORS.electricBlue.
+  // Hierarchie par opacite uniquement (0.18-0.35), strokeWidth inchange.
+  const stroke = COLORS.cobaltTw;
   const v = VARIANTS[Math.abs(variant) % VARIANTS.length];
 
   return (
