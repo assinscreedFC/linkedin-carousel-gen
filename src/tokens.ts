@@ -12,6 +12,11 @@ export const COLORS = {
   azurSoft: "#DCE9F7",
   steel: "#C0C8D0",
 
+  // Constellation palette (Phase 12.1-04, v2 BG)
+  bgNavy: "#0F2040",   // fond navy mid — remplace bg sur slides Hook/CTA v2
+  navyMid: "#2E6BB8",  // lines + cercles constellation (alias cobalt, couleur nommee distincte pour allowlist)
+  azurLight: "#4A90D9", // hex strokes constellation (alias azur, couleur nommee distincte pour allowlist)
+
   // Theme B locked : true black + electric blue (Stripe / Vercel premium tech)
   bg: "#050810",
   surface: "#0E1428",
