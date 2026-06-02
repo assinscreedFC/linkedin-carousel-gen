@@ -1,10 +1,10 @@
 // src/slides/solidscale/Hook.tsx
-// SolidScale Hook template redesign (Phase 12.1-04).
+// SolidScale Hook template v2 (Phase 12.1-04 iteration 2).
 // Mood: Artisan technique sombre (RETENU, docs/design-carousels.md).
 // Hierarchy D-10: kicker / title / subtitle / tags / byline (5 levels).
-// Layout: asymmetrique, colonne principale 680px, espace droit pour IsoHexPrism (D-06).
-// Backdrop hookCta: grand prism haut-droit cx=820 cy=280 size=520 (D-07 bookend).
-// Anti-patterns: pas de constellation, pas de dots, pas de hex literal, pas d'em-dash.
+// Layout: colonne principale pleine largeur (constellation en background ne necessite plus d'espace reserve).
+// Backdrop hookCta: GeometricConstellation multi-couches sur fond #0F2040 (bgNavy).
+// Anti-patterns: pas d'IsoHexPrism, pas de hex literal, pas d'em-dash.
 
 import React from "react";
 import { COLORS, FONTS, TYPE, SPACING } from "../../tokens";
@@ -32,7 +32,7 @@ export function Hook({
       flexDirection: "column",
       width: "100%",
       height: "100%",
-      backgroundColor: COLORS.bg,
+      backgroundColor: COLORS.bgNavy,
       position: "relative",
     }}>
       {/* D-09: backdrop derriere le texte (z-index inferieur par ordre DOM) */}
@@ -46,7 +46,7 @@ export function Hook({
         flexDirection: "column",
         flex: 1,
         paddingLeft: SPACING.rail,
-        paddingRight: 400,
+        paddingRight: SPACING.rail,
         paddingTop: 64,
       }}>
 
