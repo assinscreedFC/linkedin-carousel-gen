@@ -316,12 +316,12 @@ export function GeometricConstellation({ variant = 0 }: { variant?: number }): R
     >
       {/* COUCHE 1 : Lignes diagonales */}
       {v.diagonals.map(([x1, y1, x2, y2], i) => (
-        <line key={`d${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={lineStroke} strokeWidth={1} opacity={0.10} />
+        <line key={`d${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={lineStroke} strokeWidth={1.5} opacity={0.10} />
       ))}
 
       {/* COUCHE 2 : Hexagones imbriques x3 — <g> SVG natif (Satori ne supporte pas React.Fragment en SVG) */}
       {v.hexPairs.map(([outer, inner], i) => {
-        const sw = i === 1 ? 2 : 1.5;
+        const sw = i === 1 ? 2.5 : 2;
         const op = i === 1 ? 0.22 : 0.18;
         return (
           <g key={`h${i}`}>
@@ -335,13 +335,13 @@ export function GeometricConstellation({ variant = 0 }: { variant?: number }): R
       {v.circles.map((c, i) => (
         <g key={`c${i}`}>
           {!c.dashed && (
-            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={1.5} opacity={0.15} />
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={2} opacity={0.15} />
           )}
           {c.r2 && (
-            <circle cx={c.cx} cy={c.cy} r={c.r2} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="15 12" opacity={0.15} />
+            <circle cx={c.cx} cy={c.cy} r={c.r2} fill="none" stroke={lineStroke} strokeWidth={1.5} strokeDasharray="15 12" opacity={0.15} />
           )}
           {c.dashed && !c.r2 && (
-            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={1} strokeDasharray="18 12" opacity={0.12} />
+            <circle cx={c.cx} cy={c.cy} r={c.r} fill="none" stroke={lineStroke} strokeWidth={1.5} strokeDasharray="18 12" opacity={0.12} />
           )}
         </g>
       ))}
