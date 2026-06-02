@@ -10,6 +10,7 @@ export const COLORS = {
   azur: "#4A90D9",
   azurDark: "#3B82F6",
   electricBlue: "#60A5FA",  // Tailwind blue-400 — constellation accent electrique (Phase 12.1-04)
+  cobaltTw: "#2563EB",      // Tailwind blue-600 — palette officielle SolidScale DESIGN.md (test Anis)
   azurSoft: "#DCE9F7",
   steel: "#C0C8D0",
 
