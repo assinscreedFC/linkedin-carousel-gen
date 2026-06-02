@@ -303,10 +303,10 @@ const VARIANTS: ConstellationVariant[] = [
 ];
 
 export function GeometricConstellation({ variant = 0 }: { variant?: number }): React.ReactElement {
-  // Couleur cobaltTw #2563EB (Tailwind blue-600, palette officielle SolidScale DESIGN.md).
-  // Test Anis "essaye du cobalte" — Phase 12.1-04. Rollback : COLORS.electricBlue.
+  // Couleur azurDark #3B82F6 — meme token que le kicker Hook.tsx (Anis 2026-06-02 : coherence visuelle texte / decor).
+  // Historique : cobaltTw #2563EB (test "essaye du cobalte"), electricBlue #60A5FA (version precedente).
   // Hierarchie par opacite uniquement (0.18-0.35), strokeWidth inchange.
-  const stroke = COLORS.cobaltTw;
+  const stroke = COLORS.azurDark;
   const v = VARIANTS[Math.abs(variant) % VARIANTS.length];
 
   return (
