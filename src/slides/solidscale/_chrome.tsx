@@ -246,13 +246,14 @@ export function GeometricConstellation(): React.ReactElement {
   );
 }
 
-// Backdrop v2 : fond navy mid + GeometricConstellation pour Hook/CTA,
-// fond bg + constellation discrete pour step.
-// D-06: positions fixes, pas de gradient radial bleu fort (supprime sur hookCta).
+// Backdrop v3 : fond #050810 (theme B) + gradient radial bleu v10 (Hook validation) +
+// GeometricConstellation en overlay (couche suppletive, z-index DOM intermediaire).
+// D-06: positions fixes, gradient radial restaure (valide par Anis en v10).
 export function Backdrop({
   variant,
 }: { variant: "hookCta" | "step" }): React.ReactElement {
   if (variant === "hookCta") {
+    // Fond bg #050810 + radial-gradient azurDark + cobalt (v10 restaure) + constellation overlay.
     return (
       <div
         style={{
@@ -262,14 +263,17 @@ export function Backdrop({
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundColor: COLORS.bgNavy,
+          backgroundColor: COLORS.bg,
+          backgroundImage:
+            "radial-gradient(circle at 80% 18%, rgba(59,130,246,0.55) 0%, rgba(59,130,246,0.12) 32%, rgba(5,8,16,0) 60%), " +
+            "radial-gradient(circle at 22% 60%, rgba(46,107,184,0.45) 0%, rgba(46,107,184,0.08) 30%, rgba(5,8,16,0) 55%)",
         }}
       >
         <GeometricConstellation />
       </div>
     );
   }
-  // variant === "step" : fond uni COLORS.bg, constellation discrete
+  // variant === "step" : fond bg #050810, constellation discrete en overlay.
   return (
     <div
       style={{
@@ -279,6 +283,7 @@ export function Backdrop({
         left: 0,
         width: "100%",
         height: "100%",
+        backgroundColor: COLORS.bg,
       }}
     >
       <GeometricConstellation />
