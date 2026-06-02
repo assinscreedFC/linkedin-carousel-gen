@@ -53,17 +53,6 @@
       "figure": "4x",
       "label": "de retour sur investissement median sur les deploiements IA en entreprise dans les 12 premiers mois",
       "source": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai"
-    },
-    {
-      "template": "CTA",
-      "kicker": "AUDIT GRATUIT",
-      "headline": "Votre premier cas IA en 90 jours, garanti",
-      "subtitle": "30 minutes pour identifier le cas a forte valeur dans votre entreprise",
-      "cta_label": "Reserver l'audit",
-      "url": "https://solidscale.tech",
-      "urlDisplay": "solidscale.tech",
-      "urlReal": "https://solidscale.tech",
-      "signature": "Anis Hammouche, SolidScale"
     }
   ]
 }

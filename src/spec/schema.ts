@@ -72,7 +72,7 @@ export const CarouselSpecSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/, "slug must match ^[a-z0-9-]+$ (path traversal protection)"),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   format: z.enum(["portrait", "square"]).default("portrait"),
-  slides: z.array(SlideSchema).min(8, "min 8 slides (D-05)").max(10, "max 10 slides (D-05)"),
+  slides: z.array(SlideSchema).min(7, "min 7 slides (D-05)").max(10, "max 10 slides (D-05)"),
   pipeline_applied: PipelineAppliedSchema,
 });
 
