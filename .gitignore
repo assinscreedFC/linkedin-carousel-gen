@@ -184,3 +184,8 @@ output/
 *.spec.json
 !examples/*.spec.json
 .env.local
+
+# internal tooling/planning — never publish
+.claude/
+.planning/
+CLAUDE.md
